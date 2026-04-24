@@ -1,0 +1,1 @@
+"""FastAPI DDD demo application."""

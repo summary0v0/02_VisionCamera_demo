@@ -1,0 +1,16 @@
+# 忽略JetBrains系列IDE全部配置
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Python项目通用忽略规则
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+dist/
+build/
+*.egg-info/

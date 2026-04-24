@@ -1,0 +1,1 @@
+"""Line scan domain package."""
