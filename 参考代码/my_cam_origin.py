@@ -1,5 +1,5 @@
 # _*_ coding: utf-8 -*_
-import configs.IKapBoard as IKapBoard
+import stone_vision_detector.infrastructure.camera.IKapBoard as IKapBoard
 import ctypes
 import os
 import tkinter
