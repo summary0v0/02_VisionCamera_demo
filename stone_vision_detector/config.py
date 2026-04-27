@@ -7,8 +7,8 @@
 CAMERA_INDEX = 0
 
 # 输出目录配置
-OUTPUT_IMAGE_DIR = "output/images"
-OUTPUT_REPORT_DIR = "output/reports"
+OUTPUT_IMAGE_DIR = "test/output/images"
+OUTPUT_REPORT_DIR = "test/output/reports"
 
 # 预处理配置
 GAUSSIAN_BLUR_KERNEL = (5, 5)

@@ -56,7 +56,7 @@ class IKapBoardGrabLineTrigger:
             return
         IKapBoard.IKapClose(self.m_hDev)
 
-    # Load configuration file
+    # Load configuration test
     def LoadConfigurationFile(self, strFileName):
         res = IKapBoard.IKapLoadConfigurationFromFile(self.m_hDev, strFileName)
         if res == IKapBoard.IK_RTN_OK:
@@ -197,7 +197,7 @@ def main():
         print("Open device failure")
         os._exit(0)
 
-    # Load configuration file
+    # Load configuration test
     root = tkinter.Tk()
     root.withdraw()
     fileName = filedialog.askopenfilename(title=b'Selected File', filetypes=[('vlcf', '*.vlcf')],
@@ -207,7 +207,7 @@ def main():
     else:
         print(fileName)
         if not grab.LoadConfigurationFile(fileName.encode('utf-8')):
-            print("Load configuration file failure")
+            print("Load configuration test failure")
             os._exit(0)
 
     # Set line trigger
