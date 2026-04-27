@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-import time
-from configs.IKapBoard import *  # 导入封装好的SDK
-
+from stone_vision_detector.capture.IKapBoard import *
 def grab_image_demo():
     """
     IKapBoard 图像采集Demo
