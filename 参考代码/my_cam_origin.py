@@ -1,5 +1,5 @@
 # _*_ coding: utf-8 -*_
-import common.IKapBoard as IKapBoard
+import configs.IKapBoard as IKapBoard
 import ctypes
 import os
 import tkinter
