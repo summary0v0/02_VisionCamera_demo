@@ -10,7 +10,7 @@ import cv2
 DEFINE_FRAME_COUNT = 1
 
 
-class SingleCameraLineTriggerDemo:
+class SingleCameraLineTrigger:
     def __init__(self, save_path="./output_images"):
         self.m_hDev = ctypes.c_void_p(None)
         self.m_nCurFrameIndex = ctypes.c_uint(0)
@@ -144,7 +144,7 @@ if __name__ == "__main__":
         print("未检测到 IKap 采集卡！")
         os._exit(0)
 
-    demo = SingleCameraLineTriggerDemo(save_path="./demo_output")
+    demo = SingleCameraLineTrigger(save_path="./demo_output")
 
     # 1. 打开卡 0
     if not demo.OpenDevice(0):
