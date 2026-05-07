@@ -46,34 +46,41 @@ class Window(
         self.stackedWidget.setCurrentIndex(0)
         self.beautification()
         self.init_data()
+        with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+            self.cfg = json.load(f)
+            f.close()
+        self.gui_only_mode = bool(self.cfg.get("gui_only_mode", False))
         # 是否启动了扫描
         self.scan = False
         # 当前选中的行
         self.row_selected = None
 
         # 看门狗
-        self.watch_dog = WatchDogThread(ID=len(self.datas))
-        self.watch_dog.start()
+        self.watch_dog = None
+        if not self.gui_only_mode:
+            self.watch_dog = WatchDogThread(ID=len(self.datas))
+            self.watch_dog.start()
         self.start_n = 0
         # 用于记录有没有start过
 
         # 初始化
-        self.ini_cam = InitThread()
+        self.ini_cam = InitThread() if not self.gui_only_mode else None
 
         # qr1
-        try:
-            self.qr1 = QRThread1()
-            self.qr1.start()
-            self.qr2 = QRThread2()
-            self.qr2.start()
-            self.qr3 = QRThread3()
-            self.qr3.start()
-            self.qr4 = QRThread4()
-            self.qr4.start()
-            self.qr5 = QRThread5()
-            self.qr5.start()
-        except Exception as e:
-            print('qr: ', e)
+        if not self.gui_only_mode:
+            try:
+                self.qr1 = QRThread1()
+                self.qr1.start()
+                self.qr2 = QRThread2()
+                self.qr2.start()
+                self.qr3 = QRThread3()
+                self.qr3.start()
+                self.qr4 = QRThread4()
+                self.qr4.start()
+                self.qr5 = QRThread5()
+                self.qr5.start()
+            except Exception as e:
+                print('qr: ', e)
 
         # cad
         # self.cad_t = CadThread()
@@ -88,9 +95,6 @@ class Window(
 
         # self.ini_cam.start()
         # 读取配置文件
-        with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
-            self.cfg = json.load(f)
-            f.close()
         self.mono_vlcf = self.cfg['mono_vlcf']
         self.mono_ini = self.cfg['mono_ini']
         self.color_vlcf = self.cfg['color_vlcf']
@@ -99,7 +103,7 @@ class Window(
 
         self.use_color = self.cfg['color_cam']
         # 不使用彩色相机
-        if self.use_color == 0:
+        if self.use_color == 0 and self.watch_dog is not None:
             self.watch_dog.use_color_cam = 0
             self.pushButton.setText('打开')
         else:
@@ -233,7 +237,7 @@ class Window(
         self.pushButton.clicked.connect(self.change_color_status)
         # 重置cadn
         self.toolButton_15.clicked.connect(self.del_cad_bmp)
-        self.pushButton_2.clicked.connect(lambda: self.ini_cam.start())
+        self.pushButton_2.clicked.connect(lambda: self.ini_cam.start() if self.ini_cam is not None else None)
         # 查看绘制的cad
         self.toolButton_16.clicked.connect(self.open_canvas)
 
@@ -352,6 +356,9 @@ class Window(
             self.init_data()
         # 扫描
         elif flag == 5:
+            if self.watch_dog is None:
+                self.write_logger('GUI-only mode: 扫描功能已禁用')
+                return
             if self.scan is False:
                 # if self.comboBox_3.currentIndex() == -1:
                 #     self.tip_win = TipWin()

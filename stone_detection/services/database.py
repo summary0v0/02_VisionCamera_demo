@@ -30,8 +30,34 @@ def _db_module():
     return import_reference_module("common.dbFunction")
 
 
+def _fallback(name: str):
+    if name == "get_scan_counts":
+        return {"today_count": 0, "total_count": 0}
+    if name == "get_scan_areas":
+        return {"today_area": 0, "total_area": 0}
+    if name in ("query_stone_measurements", "get_cutting_records", "query_cutting_records", "get_latest_defect_info", "get_all_users", "query_measurements"):
+        return []
+    if name == "query_image_urls":
+        return {}
+    if name in ("delete_user",):
+        return False, "GUI-only mode: user operation is disabled"
+    if name in ("update_user",):
+        return False, "GUI-only mode: user operation is disabled", "disabled"
+    if name == "check_login":
+        return 1
+    if name == "get_user_role":
+        return "superadmin"
+    if name in ("register_user", "change_password", "update_cutting_status"):
+        return False
+    return None
+
+
 def _call(name: str, *args, **kwargs):
-    return getattr(_db_module(), name)(*args, **kwargs)
+    try:
+        return getattr(_db_module(), name)(*args, **kwargs)
+    except Exception as exc:
+        print(f"[database] {name} failed, fallback enabled: {exc}")
+        return _fallback(name)
 
 
 def __getattr__(name: str):

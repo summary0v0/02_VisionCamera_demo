@@ -37,7 +37,8 @@ class CadSettingsMixin:
             self.label_4.setText('当前CAD文件：' + get_filename_path)
             self.cad_path = get_filename_path
             # 传参给watch dog
-            self.watch_dog.cad_path = self.cad_path
+            if self.watch_dog is not None:
+                self.watch_dog.cad_path = self.cad_path
             cad_name = self.cad_path.split('/')[-1].split('.')[0]
             p = './' + cad_name + '.bmp'
             # 不存在的话要新建
@@ -132,7 +133,8 @@ class CadSettingsMixin:
         elif self.use_color == 1:
             self.use_color = 0
             self.pushButton.setText('打开')
-        self.watch_dog.use_color_cam = self.use_color
+        if self.watch_dog is not None:
+            self.watch_dog.use_color_cam = self.use_color
 
     def modify_setting(self, op):
         if op == 0 or op == 2:

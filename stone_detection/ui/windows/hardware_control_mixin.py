@@ -228,7 +228,8 @@ class HardwareControlMixin:
             print("正在关闭程序...")
 
             # 安全关闭硬件连接
-            self.hardware_integration.cleanup_on_close()
+            if hasattr(self, 'hardware_integration'):
+                self.hardware_integration.cleanup_on_close()
 
             # 其他清理工作
             if hasattr(self, 'status_check_timer'):
