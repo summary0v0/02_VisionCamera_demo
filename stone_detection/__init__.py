@@ -1,0 +1,2 @@
+"""Stone detection UI package."""
+
