@@ -1,0 +1,12 @@
+[2025-09-18 22:41:51] User: admin, Action: update, Target: 2, Result: 用户 2 更新成功, Extra: password -> ******
+[2025-09-18 22:42:21] User: admin, Action: update, Target: 2, Result: 用户 2 更新成功, Extra: password -> ******
+[2025-09-18 23:03:07] User: admin, Action: update_user, Target: 2, Result: 输入权限值错误，只能修改为admin/productor/undefined其中之一
+[2025-09-18 23:04:16] User: admin, Action: update_user, Target: 2, Result: 输入权限值错误，只能修改为admin/productor/undefined其中之一
+[2025-09-18 23:04:40] User: admin, Action: update_user, Target: 2, Result: 用户 2 更新成功
+[2025-09-18 23:06:24] User: admin, Action: update_user, Target: 2, Result: 用户 2 更新成功
+[2025-09-18 23:11:29] User: admin, Action: update_user, Target: 2, Result: 用户 2 更新成功
+[2025-09-18 23:11:43] User: admin, Action: update_user, Target: 2, Result: 用户 2 更新成功
+[2025-09-19 11:54:46] User: admin, Action: update_user, Target: 12, Result: 用户 12 更新成功
+[2025-09-19 11:55:02] User: admin, Action: update_user, Target: 12123, Result: 用户 12123 不存在
+[2025-09-19 20:49:18] User: admin, Action: update_user, Target: ceshi2, Result: 权限不足，无法修改该用户
+[2025-09-19 20:49:36] User: admin, Action: update_user, Target: 2, Result: 用户 2 更新成功，修改了：权限：undefined → undefined、姓名：测试3 → 测试?

@@ -1,0 +1,782 @@
+# _*_ coding: utf-8 -*_
+from ctypes import *
+import ctypes
+import platform
+
+# import library
+if platform.system() == 'Windows':
+    libIKapBoard = windll.LoadLibrary("IKapBoard.dll")
+else:
+    libIKapBoard = cdll.LoadLibrary("IKapBoard.so")
+
+# Event type
+IKEvent_GrabStart = (0x00000000)
+IKEvent_FrameReady = (0x00000001)
+IKEvent_GrabStop = (0x00000002)
+IKEvent_FrameLost = (0x00000003)
+IKEvent_TimeOut = (0x00000004)
+IKEvent_PixelClock = (0x00000005)
+IKEvent_No_PixelClock = (0x00000006)
+IKEvent_External_Trigger_Ignored = (0x00000007)
+IKEvent_CXP_Over_Current_Protection = (0x00000008)
+IKEvent_CXP_CRC_Check_Error = (0x00000009)
+IKEvent_CXP_Transfer_Error = (0x0000000A)
+IKEvent_GrabLine = (0x00100000)
+IKEvent_GrabLineEnd = (0x00200000)
+IKEvent_INPUT_FALLING_EDGE = (0x00400000)
+IKEVENT_INPUT_RISING_EDGE = (0x00800000)
+IKEvent_Start_Of_Frame = (0x01000000)
+IKEvent_End_Of_Frame = (0x02000000)
+IKEvent_End_Of_Transfer = (0x04000000)
+
+# Resource Type
+IKBoardUnknown = 0xFFFFFFFF
+IKBoardALL = 0x00000000
+IKBoardUSB30 = 0x00000001
+IKBoardPCIE = 0x00000002
+
+# Parameter information
+IKP_IMAGE_WIDTH = (0x10000001)
+IKP_IMAGE_HEIGHT = (0x10000002)
+IKP_DATA_FORMAT = (0x10000003)
+IKP_BOARD_BIT = (0x10000004)
+IKP_TIME_OUT = (0x10000005)
+IKP_SCAN_TYPE = (0x10000006)
+IKP_FPGA_VERSION = (0x10000007)
+IKP_INTERNEL_BUFFER_SIZE = (0x10000008)
+IKP_FRAME_SIZE = (0x10000009)
+IKP_IMAGE_TYPE = (0x1000000a)
+IKP_FRAME_COUNT = (0x1000000b)
+IKP_FRAME_TRANSFER_MODE = (0x1000000c)
+IKP_FRAME_AUTO_CLEAR = (0x1000000d)
+IKP_GRAB_MODE = (0x1000000e)
+IKP_FRAME_TIME_STAMP_LOW = (0x1000000f)
+IKP_FRAME_TIME_STAMP_HIGH = (0x10000010)
+IKP_BLOCK_TIME_STAMP_LOW = (0x10000011)
+IKP_BLOCK_TIME_STAMP_HIGH = (0x10000012)
+IKP_TAP_NUMBER = (0x10000013)
+IKP_TAP_ARRANGEMENT = (0x10000014)
+IKP_BAYER_PATTERN = (0x10000015)
+IKP_PIXEL_CLOCK = (0x10000016)
+IKP_DATA_VALID_ENABLE = (0x10000017)
+IKP_CC1_SOURCE = (0x10000018)
+IKP_CC2_SOURCE = (0x10000019)
+IKP_CC3_SOURCE = (0x1000001a)
+IKP_CC4_SOURCE = (0x1000001b)
+IKP_BOARD_TRIGGER_MODE = (0x1000001c)
+IKP_BOARD_TRIGGER_SOURCE = (0x1000001d)
+IKP_GENERAL_INPUT1_SAMPLE_MODE = (0x1000001e)
+IKP_GENERAL_INPUT1_PROTECT_MODE = (0x1000001f)
+IKP_GENERAL_INPUT1_MINIMUM_INTERVAL = (0x10000020)
+IKP_GENERAL_INPUT2_SAMPLE_MODE = (0x10000021)
+IKP_GENERAL_INPUT2_PROTECT_MODE = (0x10000022)
+IKP_GENERAL_INPUT2_MINIMUM_INTERVAL = (0x10000023)
+IKP_SHAFT_ENCODER1_PULSE_DROP = (0x10000024)
+IKP_SHAFT_ENCODER1_PROTECT_MODE = (0x10000025)
+IKP_SHAFT_ENCODER1_MINIMUM_INTERVAL = (0x10000026)
+IKP_INTEGRATION_TRIGGER_SOURCE = (0x10000027)
+IKP_INTEGRATION_TRIGGER_FREQUENCY = (0x10000028)
+IKP_STROBE_TRIGGER_SOURCE = (0x10000029)
+IKP_BOARD_SYNC_OUTPUT1_SOURCE = (0x1000002a)
+IKP_BOARD_SYNC_OUTPUT2_SOURCE = (0x1000002b)
+IKP_GENERAL_OUTPUT1_SOURCE = (0x1000002c)
+IKP_GENERAL_OUTPUT2_SOURCE = (0x1000002d)
+IKP_INTEGRATION_METHOD = (0x1000002e)
+IKP_INTEGRATION_PARAM1 = (0x1000002f)
+IKP_INTEGRATION_PARAM2 = (0x10000030)
+IKP_INTEGRATION_PARAM3 = (0x10000031)
+IKP_INTEGRATION_PARAM4 = (0x10000032)
+IKP_INTEGRATION_POLARITY1 = (0x10000033)
+IKP_INTEGRATION_POLARITY2 = (0x10000034)
+IKP_STROBE_METHOD = (0x10000035)
+IKP_STROBE_PARAM1 = (0x10000036)
+IKP_STROBE_PARAM2 = (0x10000037)
+IKP_STROBE_PARAM3 = (0x10000038)
+IKP_STROBE_PARAM4 = (0x10000039)
+IKP_STROBE_POLARITY = (0x1000003a)
+IKP_GENERAL_OUTPUT1_POLARITY = (0x1000003b)
+IKP_GENERAL_OUTPUT1_DELAY = (0x1000003c)
+IKP_GENERAL_OUTPUT2_POLARITY = (0x1000003d)
+IKP_GENERAL_OUTPUT2_DELAY = (0x1000003e)
+IKP_GENERAL_INPUT1_TRIGGER_MODE = (0x1000003f)
+IKP_GENERAL_INPUT2_TRIGGER_MODE = (0x10000040)
+IKP_BOARD_SYNC1_TRIGGER_MODE = (0x10000041)
+IKP_BOARD_SYNC2_TRIGGER_MODE = (0x10000042)
+IKP_SHAFT_ENCODER1_CHANNEL = (0x10000043)
+IKP_SHAFT_ENCODER1_MULTIPlY_FACTOR = (0x10000044)
+IKP_PCB_VERSION = (0x10000045)
+IKP_LVAL_FILTER = (0x10000046)
+IKP_FRAME_TRANSFER_PERIOD = (0x10000047)
+IKP_LINE_TRANSFER_PERIOD = (0x10000048)
+IKP_FPGA_EXTERNAL_TRIGGER_TIMEOUT = (0x10000049)
+IKP_IMAGE_OFFSET_X = (0x10000050)
+IKP_GENERAL_INPUT1_POLARITY = (0x10000051)
+IKP_GENERAL_INPUT1_MIN_WIDTH = (0x10000052)
+IKP_GENERAL_INPUT2_POLARITY = (0x10000053)
+IKP_GENERAL_INPUT2_MIN_WIDTH = (0x10000054)
+IKP_CAMERA_PIXEL_CLOCK = (0x10000055)
+IKP_PCIE_KERNAL_BLOCK_SIZE = (0x10000056)
+IKP_SOFTWARE_TRIGGER_WIDTH = (0x10000057)
+IKP_SOFTWARE_TRIGGER_PERIOD = (0x10000058)
+IKP_SOFTWARE_TRIGGER_COUNT = (0x10000059)
+IKP_SOFTWARE_TRIGGER_START = (0x10000060)
+IKP_SOFTWARE_TRIGGER_DELAY = (0x10000061)
+IKP_SFOTWARE_TRIGGER_POLARITY = (0x10000062)
+IKP_GRAB_STATUS = (0x10000063)
+IKP_CHECK_FRAME_VALID_SIGNAL = (0x10000064)
+IKP_PIXEL_CLOCK_POLLING_TIME = (0x10000065)
+IKP_SOFTWARE_TRIGGER_SYNC_MODE = (0x10000066)
+IKP_HARDWARE_TRIGGER_GENERAL_INPUT1_DELAY = (0x10000067)
+IKP_HARDWARE_TRIGGER_GENERAL_INPUT2_DELAY = (0x10000068)
+IKP_IMAGE_ROI_X = (0x10000069)
+IKP_SHAFT_ENCODER1_MIN_WIDTH = (0x10000070)
+IKP_SHAFT_ENCODER1_VALID_DIRECTION = (0x10000071)
+IKP_SHAFT_ENCODER1_REVERSE_COMPENSATION = (0x10000072)
+IKP_FRAME_SIZE_64_LOW = (0x10000073)
+IKP_FRAME_SIZE_64_HIGH = (0x10000074)
+IKP_BOARD_TRIGGER_OUTTER_MODE_FRAME_COUNT = (0x10000075)
+IKP_SHAFT_ENCODER1_QUAD_FREQUENCY_SOURCE_TYPE = (0x10000076)
+IKP_FPGA_SERIAL_NUMBER = (0x20000001)
+IKP_PCIE_LINK_STATE = (0x20000002)
+IKP_PCIE_SPEED_MISS_REQUIREMENT = (0x20000003)
+IKP_PCI_CONFIGURATION = (0x20000004)
+IKP_HARDWARE_TRIGGER_GENERAL_INPUT_DELAY_MODE = (0x20000005)
+IKP_HARDWARE_TRIGGER_GENERAL_INPUT1_DELAY_IN_LINES = (0x20000006)
+IKP_HARDWARE_TRIGGER_GENERAL_INPUT2_DELAY_IN_LINES = (0x20000007)
+IKP_EVENT_INPUT_INTERNAL_COUNT = (0x20000008)
+IKP_EVENT_INPUT_GENERAL_1_COUNT = (0x20000009)
+IKP_EVENT_INPUT_GENERAL_2_COUNT = (0x2000000a)
+IKP_EVENT_INPUT_SHAFT_ENCODER_A_COUNT = (0x2000000b)
+IKP_EVENT_INPUT_SHAFT_ENCODER_B_COUNT = (0x2000000c)
+IKP_EVENT_INPUT_BOARD_SYNC_IN_1_COUNT = (0x2000000d)
+IKP_EVENT_INPUT_INTEGRATION_SIG_1_COUNT = (0x2000000e)
+IKP_EVENT_INPUT_INTEGRATION_SIG_2_COUNT = (0x2000000f)
+IKP_RCV_MORE_DATA_IN_TRIGGER_MODE = (0x20000010)
+IKP_DISABLE_IO_EVENT = (0x20000011)
+IKP_PUBLIC_VERSION_SUPPORT = (0x20000012)
+IKP_SHAFT_ENCODER1_REVERSE_COMPENSATION_LIMIT = (0x20000013)
+IKP_SHAFT_ENCODER1_CLOCK_DUTY_COMPENSATION_TYPE = (0x20000014)
+IKP_SHAFT_ENCODER1_CLOCK_DUTY_COMPENSATION_WIDTH = (0x20000015)
+IKP_CL_VALID_COLUMN = (0x20000016)
+IKP_CL_SIGNAL_ENHANCE_MODE = (0x20000017)
+IKP_CL_LONG_DISTANCE_TRANSMISSION = (0x20000018)
+IKP_CXP_TEST_IMAGE = (0x30000001)
+IKP_CXP_TRIGGER_OUTPUT_SELECTOR = (0x30000002)
+IKP_LAST_FRAME_INDEX = (0x30000003)
+IKP_CXP_VOLTAGE_SUPPLY_STATUS = (0x30000004)
+IKP_CXP_POWER_SWITCH = (0x30000005)
+IKP_CXP_POWER_STATUS = (0x30000006)
+IKP_CXP_SENSE_CURRENT = (0x30000007)
+IKP_CXP_BUS_VOLTAGE = (0x30000008)
+IKP_CXP_RESET_OCP = (0x30000009)
+IKP_CXP_SENSE_VOLTAGE_HIGH = (0x3000000a)
+IKP_CXP_SENSE_VOLTAGE_LOW = (0x3000000b)
+IKP_CXP_SUPPLY_VOLTAGE_LOW = (0x3000000c)
+IKP_CXP_SUPPLY_CURRENT_LOW = (0x3000000d)
+IKP_CXP_FPGA_FRAME_TIMEOUT = (0x3000000e)
+IKP_CXP_FPGA_FRAME_TIMEOUT_MULTIPLE = (0x3000000f)
+IKP_CXP_CRC_ERROR_COUNT = (0x30000010)
+IKP_CXP_PoCXP_CHANNEL = (0x30000011)
+IKP_CXP_PoCXP_LOCKED_VOLTAGE = (0x30000012)
+IKP_CXP_SHAFT_ENCODER_DEBOUNCE = (0x30000013)
+IKP_CXP_SHAFT_ENCODER_TICK_MODE = (0x30000014)
+IKP_CXP_SHAFT_ENCODER_TICK_MAX = (0x30000015)
+IKP_CXP_SHAFT_ENCODER_TICK_RESET = (0x30000016)
+IKP_CXP_SHAFT_ENCODER_TICK_COUNT = (0x30000017)
+IKP_CXP_SHAFT_ENCODER_REVERSE_MODE = (0x30000018)
+IKP_CXP_SHAFT_ENCODER_REVERSE_MAX = (0x30000019)
+IKP_CXP_SHAFT_ENCODER_REVERSE_RESET = (0x30000020)
+IKP_CXP_SHAFT_ENCODER_REVERSE_COUNT = (0x30000021)
+IKP_CXP_GENERAL_OUTPUT1_THRESHOLD = (0x30000022)
+IKP_CXP_GENERAL_OUTPUT2_THRESHOLD = (0x30000023)
+IKP_CXP_FIRMWARE_TYPE = (0x30000024)
+IKP_CXP_TEMPERATURE = (0x30000025)
+IKP_CXP_GENERAL_INPUT_THRESHOLD = (0x30000026)
+IKP_CXP_GENERAL_OUTPUT1_SOURCE_CHANNEL = (0x30000027)
+IKP_CXP_GENERAL_OUTPUT2_SOURCE_CHANNEL = (0x30000028)
+IKP_CXP_GENERAL_INPUT1_TYPE = (0x30000029)
+IKP_CXP_GENERAL_INPUT2_TYPE = (0x3000002a)
+IKP_CXP_TRANSFER_CHANNEL_SELECTOR = (0x3000002b)
+IKP_CXP_CHANNEL_LOST_COUNT = (0x3000002c)
+IKP_CXP_CHANNEL_ERROR_COUNT = (0x3000002d)
+IKP_TRIGGER_FRAME_ACTIVE_MODE = (0x3000002e)
+IKP_JPEG_COMPRESS_ENABLE = (0x3000002f)
+IKP_JPEG_COMPRESS_QUALITY = (0x30000030)
+IKP_CXP_FRAME_BURST_COUNT = (0x30000031)
+IKP_CXP_FRAME_BURST_PERIOD = (0x30000032)
+
+# Data Format
+IKP_DATA_FORMAT_VAL_8Bit = (8)
+IKP_DATA_FORMAT_VAL_10Bit = (10)
+IKP_DATA_FORMAT_VAL_12Bit = (12)
+IKP_DATA_FORMAT_VAL_14Bit = (14)
+IKP_DATA_FORMAT_VAL_16Bit = (16)
+
+# Image Type
+IKP_IMAGE_TYPE_VAL_MONOCHROME = (0)
+IKP_IMAGE_TYPE_VAL_COLORFUL = (1)
+IKP_IMAGE_TYPE_VAL_RGB = (1)
+IKP_IMAGE_TYPE_VAL_RGBC = (2)
+IKP_IMAGE_TYPE_VAL_BGR = (3)
+IKP_IMAGE_TYPE_VAL_BGRC = (4)
+
+# Scan Type
+IKP_SCAN_TYPE_VAL_LINEAR = (0)
+IKP_SCAN_TYPE_VAL_AREA = (1)
+
+# Grab Start Mode
+IKP_GRAB_BLOCK = (0)
+IKP_GRAB_NON_BLOCK = (1)
+
+# Frame Transfer Mode
+IKP_FRAME_TRANSFER_SYNCHRONOUS = (0)
+IKP_FRAME_TRANSFER_ASYNCHRONOUS = (1)
+IKP_FRAME_TRANSFER_SYNCHRONOUS_NEXT_EMPTY_WITH_PROTECT = (2)
+
+# Frame Auto Clear
+IKP_FRAME_AUTO_CLEAR_VAL_DISABLE = (0)
+IKP_FRAME_AUTO_CLEAR_VAL_ENABLE = (1)
+
+# Bayer Pattern
+IKP_BAYER_PATTERN_VAL_NULL = (0)
+IKP_BAYER_PATTERN_VAL_BGGR = (1)
+IKP_BAYER_PATTERN_VAL_RGGB = (2)
+IKP_BAYER_PATTERN_VAL_GBRG = (3)
+IKP_BAYER_PATTERN_VAL_GRBG = (4)
+
+# CC<i> Source
+IKP_CC_SOURCE_VAL_NOT_USE = (0)
+IKP_CC_SOURCE_VAL_INTEGRATION_SIGNAL1 = (1)
+IKP_CC_SOURCE_VAL_INTEGRATION_SIGNAL2 = (2)
+IKP_CC_SOURCE_VAL_LOW = (3)
+IKP_CC_SOURCE_VAL_HIGH = (4)
+IKP_CC_SOURCE_VAL_SOFTWARE = (5)
+IKP_CC_SOURCE_VAL_GENERAL_INPUT1 = (6)
+IKP_CC_SOURCE_VAL_GENERAL_INPUT2 = (7)
+IKP_CC_SOURCE_VAL_BOARD_SYNC1 = (8)
+IKP_CC_SOURCE_VAL_BOARD_SYNC2 = (9)
+IKP_CC_SOURCE_VAL_STROBE = (10)
+
+# Board Trigger Mode
+IKP_BOARD_TRIGGER_MODE_VAL_INNER = (0)
+IKP_BOARD_TRIGGER_MODE_VAL_OUTTER = (1)
+
+# Board Trigger Source
+IKP_BOARD_TRIGGER_SOURCE_VAL_GENERAL_INPUT1 = (0)
+IKP_BOARD_TRIGGER_SOURCE_VAL_GENERAL_INPUT2 = (1)
+IKP_BOARD_TRIGGER_SOURCE_VAL_SHAFT_ENCODER1 = (2)
+IKP_BOARD_TRIGGER_SOURCE_VAL_BOARD_SYNC1 = (3)
+IKP_BOARD_TRIGGER_SOURCE_VAL_BOARD_SYNC2 = (4)
+
+# General Input<i> Sample Mode
+IKP_GENERAL_INPUT_SAMPLE_MODE_VAL_ACTIVE_HIGH = (0)
+IKP_GENERAL_INPUT_SAMPLE_MODE_VAL_ACTIVE_LOW = (1)
+IKP_GENERAL_INPUT_SAMPLE_MODE_VAL_RISING_EDGE = (2)
+IKP_GENERAL_INPUT_SAMPLE_MODE_VAL_FALLING_EDGE = (3)
+
+# General Input<i> Protect Mode
+IKP_GENERAL_INPUT_PROTECT_MODE_VAL_NOT_USE = (0)
+IKP_GENERAL_INPUT_PROTECT_MODE_VAL_DELETE = (1)
+IKP_GENERAL_INPUT_PROTECT_MODE_VAL_MEMORIZE = (2)
+
+# Shaft Encoder<i> Protect Mode
+IKP_SHAFT_ENCODER_PROTECT_MODE_VAL_NOT_USE = (0)
+IKP_SHAFT_ENCODER_PROTECT_MODE_VAL_DELETE = (1)
+IKP_SHAFT_ENCODER_PROTECT_MODE_VAL_MEMORIZE = (2)
+
+# Integration Trigger Source
+IKP_INTEGRATION_TRIGGER_SOURCE_VAL_INTERNAL = (0)
+IKP_INTEGRATION_TRIGGER_SOURCE_VAL_GENERAL_INPUT1 = (1)
+IKP_INTEGRATION_TRIGGER_SOURCE_VAL_GENERAL_INPUT2 = (2)
+IKP_INTEGRATION_TRIGGER_SOURCE_VAL_SHAFT_ENCODER1 = (5)
+IKP_INTEGRATION_TRIGGER_SOURCE_VAL_BOARD_SYNC1 = (7)
+IKP_INTEGRATION_TRIGGER_SOURCE_VAL_BOARD_SYNC2 = (8)
+IKP_INTEGRATION_TRIGGER_SOURCE_VAL_SOFTWARE = (9)
+
+# Strobe Trigger Source
+IKP_STROBE_TRIGGER_SOURCE_VAL_INTERNAL = (0)
+IKP_STROBE_TRIGGER_SOURCE_VAL_GENERAL_INPUT1 = (1)
+IKP_STROBE_TRIGGER_SOURCE_VAL_GENERAL_INPUT2 = (2)
+IKP_STROBE_TRIGGER_SOURCE_VAL_SHAFT_ENCODER1 = (5)
+IKP_STROBE_TRIGGER_SOURCE_VAL_BOARD_SYNC1 = (7)
+IKP_STROBE_TRIGGER_SOURCE_VAL_BOARD_SYNC2 = (8)
+
+# Board Sync Output Source
+IKP_BOARD_SYNC_OUTPUT_SOURCE_VAL_NOT_USE = (0)
+IKP_BOARD_SYNC_OUTPUT_SOURCE_VAL_INTERNAL = (1)
+IKP_BOARD_SYNC_OUTPUT_SOURCE_VAL_GENERAL_INPUT1 = (2)
+IKP_BOARD_SYNC_OUTPUT_SOURCE_VAL_GENERAL_INPUT2 = (3)
+IKP_BOARD_SYNC_OUTPUT_SOURCE_VAL_SHAFT_ENCODER1 = (4)
+IKP_BOARD_SYNC_OUTPUT_SOURCE_VAL_INTEGRATION_SIGNAL1 = (5)
+IKP_BOARD_SYNC_OUTPUT_SOURCE_VAL_INTEGRATION_SIGNAL2 = (6)
+IKP_BOARD_SYNC_OUTPUT_SOURCE_VAL_STROBLE_SIGNAL1 = (7)
+IKP_BOARD_SYNC_OUTPUT_SOURCE_VAL_BOARD_SYNC1 = (8)
+IKP_BOARD_SYNC_OUTPUT_SOURCE_VAL_BOARD_SYNC2 = (9)
+
+# General Output<i> Source
+IKP_GENERAL_OUTPUT_SOURCE_VAL_INTERNAL = (0)
+IKP_GENERAL_OUTPUT_SOURCE_VAL_GENERAL_INPUT1 = (1)
+IKP_GENERAL_OUTPUT_SOURCE_VAL_GENERAL_INPUT2 = (2)
+IKP_GENERAL_OUTPUT_SOURCE_VAL_SHAFT_ENCODER1 = (3)
+IKP_GENERAL_OUTPUT_SOURCE_VAL_INTEGRATION_SIGNAL1 = (4)
+IKP_GENERAL_OUTPUT_SOURCE_VAL_INTEGRATION_SIGNAL2 = (5)
+IKP_GENERAL_OUTPUT_SOURCE_VAL_STROBLE_SIGNAL1 = (6)
+IKP_GENERAL_OUTPUT_SOURCE_VAL_NOT_USE = (7)
+
+# General Output<i> Polarity
+IKP_GENERAL_OUTPUT_POLARITY_VAL_SAME_TO_SOURCE = (0)
+IKP_GENERAL_OUTPUT_POLARITY_VAL_OPPOSITE_TO_SOURCE = (1)
+
+# Integration Method
+IKP_INTEGRATION_METHOD_VAL_1 = (0)
+IKP_INTEGRATION_METHOD_VAL_2 = (1)
+IKP_INTEGRATION_METHOD_VAL_3 = (2)
+IKP_INTEGRATION_METHOD_VAL_4 = (3)
+IKP_INTEGRATION_METHOD_VAL_5 = (4)
+
+# Integration Polarity
+IKP_INTEGRATION_POLARITY_VAL_HIGH = (0)
+IKP_INTEGRATION_POLARITY_VAL_LOW = (1)
+
+# Strobe Method
+IKP_STROBE_METHOD_VAL_1 = (0)
+IKP_STROBE_METHOD_VAL_2 = (1)
+IKP_STROBE_METHOD_VAL_3 = (2)
+IKP_STROBE_METHOD_VAL_4 = (3)
+
+# Strobe Polarity
+IKP_STROBE_POLARITY_VAL_HIGH = (0)
+IKP_STROBE_POLARITY_VAL_LOW = (1)
+
+# General input trigger mode
+IKP_GENERAL_INPUT_TRIGGER_MODE_VAL_EDGE = (0)
+IKP_GENERAL_INPUT_TRIGGER_MODE_VAL_LEVEL = (1)
+
+# Board synchronization trigger mode
+IKP_BOARD_SYNC_TRIGGER_MODE_VAL_EDGE = (0)
+IKP_BOARD_SYNC_TRIGGER_MODE_VAL_LEVEL = (1)
+
+# Shaft encoder channel
+IKP_SHAFT_ENCODER_CHANNEL_VAL_A = (0)
+IKP_SHAFT_ENCODER_CHANNLE_VAL_B = (1)
+
+# Shaft encoder mutiply factor
+IKP_SHAFT_ENCODER_MULTIPLY_FACTOR_VAL_1 = (0)
+IKP_SHAFT_ENCODER_MULTIPLY_FACTOR_VAL_2 = (1)
+IKP_SHAFT_ENCODER_MULTIPLY_FACTOR_VAL_4 = (2)
+IKP_SHAFT_ENCODER_MULTIPLY_FACTOR_VAL_8 = (3)
+IKP_SHAFT_ENCODER_MULTIPLY_FACTOR_VAL_16 = (4)
+IKP_SHAFT_ENCODER_MULTIPLY_FACTOR_VAL_32 = (5)
+
+# LVAL Filter Enable
+IKP_LVAL_FILTER_DISABLE = (0)
+IKP_LVAL_FILTER_ENABLE = (1)
+
+# FPGA External Trigger Timeout
+IKP_FPGA_EXTERNAL_TRIGGER_TIMEOUT_MIN = (8)
+IKP_FPGA_EXTERNAL_TRIGGER_TIMEOUT_MAX = (1024 * 1024)
+
+# General input polarity
+IKP_GENERAL_INPUT_POLARITY_VAL_HIGH = (0)
+IKP_GENERAL_INPUT_POLARITY_VAL_LOW = (1)
+
+# General input min valid width
+IKP_GENERAL_INPUT_MIN_WIDTH_VAL_MINIMUM = (50)
+
+# PCIe Kernal Block Size
+IKP_PCIE_KERNAL_BLOCK_SIZE_VAL_4M = (1)
+IKP_PCIE_KERNAL_BLOCK_SIZE_VAL_8M = (2)
+IKP_PCIE_KERNAL_BLOCK_SIZE_VAL_12M = (3)
+IKP_PCIE_KERNAL_BLOCK_SIZE_VAL_16M = (4)
+
+# Software trigger polarity
+IKP_SOFTWARE_TRIGGER_POLARITY_VAL_HIGH = (0)
+IKP_SOFTWARE_TRIGGER_POLARITY_VAL_LOW = (1)
+
+# Software trigger sync mode
+IKP_SOFTWARE_TRIGGER_SYNC_MODE_VAL_DISABLE = (0)
+IKP_SOFTWARE_TRIGGER_SYNC_MODE_VAL_ENABLE = (1)
+
+# CoaXPress board trigger output selector
+IKP_CXP_TRIGGER_OUTPUT_NO = (0)
+IKP_CXP_TRIGGER_OUTPUT_INTEGRATION_SIGNAL1 = (1)
+IKP_CXP_TRIGGER_OUTPUT_INTEGRATION_SIGNAL2 = (2)
+
+# Monitor IO type
+IKP_EVENT_INPUT_INTERNAL = (1 << 0)
+IKP_EVENT_INPUT_GENERAL_1 = (1 << 1)
+IKP_EVENT_INPUT_GENERAL_2 = (1 << 2)
+IKP_EVENT_INPUT_SHAFT_ENCODER_A = (1 << 3)
+IKP_EVENT_INPUT_SHFAT_ENCODER_B = (1 << 4)
+IKP_EVENT_INPUT_BOARD_SYNC_IN_1 = (1 << 5)
+IKP_EVENT_INPUT_INTEGRATION_SIG_1 = (1 << 6)
+IKP_EVENT_INPUT_INTEGRATION_SIG_2 = (1 << 7)
+
+# CoaXPress test image for debug usage
+IKP_CXP_TEST_IMAGE_OFF = (0)
+IKP_CXP_TEST_IMAGE_1 = (1)
+IKP_CXP_TEST_IMAGE_2 = (2)
+
+# Shaft encoder valid direction
+IKP_SHAFT_ENCODER1_VALID_DIR_BOTH = (0)
+IKP_SHAFT_ENCODER1_VALID_DIR_FORWARD = (1)
+IKP_SHAFT_ENCODER1_VALID_DIR_BACKWARD = (2)
+
+# Shaft encoder reverse compensation
+IKP_SHAFT_ENCODER1_REVERSE_COMPENSATION_OFF = (0)
+IKP_SHAFT_ENCODER1_REVERSE_COMPENSATION_ON = (1)
+
+# CoaXPress uart serial port index
+IKP_CXP_UART_PORT = (8)
+
+# Jpeg/Tiff/Png Image Compression flag
+IKP_DEFAULT_COMPRESSION = (0x0000)  # default compression
+IKP_JPEG_QUALITYSUPERB = (0x0001)  # save with superb quality (100:1)
+IKP_JPEG_QUALITYGOOD = (0x0002)  # save with good quality (75:1)
+IKP_JPEG_QUALITYNORMAL = (0x0003)  # save with normal quality (50:1)
+IKP_JPEG_QUALITYAVERAGE = (0x0004)  # save with average quality (25:1)
+IKP_JPEG_QUALITYBAD = (0x0005)  # save with bad quality (10:1)
+IKP_TIFF_NONE = (0x0100)  # save without any compression
+IKP_TIFF_LZW = (0x0101)  # save using LZW compression
+IKP_PNG_Z_NO_COMPRESSION = (0x0200)  # save without ZLib compression
+IKP_PNG_Z_BEST_SPEED = (0x0201)  # save using ZLib level 1 compression flag (default value is 6)
+IKP_PNG_Z_DEFAULT_COMPRESSION = (0x0202)  # save using ZLib level 6 compression flag (default recommended value)
+IKP_PNG_Z_BEST_COMPRESSION = (0x0203)  # save using ZLib level 9 compression flag (default value is 6)
+
+# General output threshold
+IKP_GENERAL_OUTPUT_THRESHOLD_3V3 = (0x0)
+IKP_GENERAL_OUTPUT_THRESHOLD_24V = (0x1)
+
+# Shaft encoder debounce value
+IKP_SHAFT_ENCODER_DEBOUNCE_MIN = (0)
+IKP_SHAFT_ENCODER_DEBOUNCE_MAX = (1000 * 1000 * 1000)
+
+# CXP General input threshold
+IKP_CXP_GENERAL_INPUT_THRESHOLD_5V = (0)
+IKP_CXP_GENERAL_INPUT_THRESHOLD_3V = (1)
+
+# General input delay mode
+IKP_HARDWARE_TRIGGER_GENERAL_INPUT_DELAY_MODE_IN_LINES = (0)
+IKP_HARDWARE_TRIGGER_GENERAL_INPUT_DELAY_MODE_IN_US = (1)
+
+IKP_HARDWARE_TRIGGER_GENERAL_INPUT_DELAY_IN_LINES_MIN = (0)
+IKP_HARDWARE_TRIGGER_GENERAL_INPUT_DELAY_IN_LINES_MAX = (65535)
+
+# Shaft encoder quad frequency source type
+IKP_SHAFT_ENCODER1_QUAD_FREQUENCY_SOURCE_TYPE_VAL_DOUBLE_CHANNEL = (0)
+IKP_SHAFT_ENCODER1_QUAD_FREQUENCY_SOURCE_TYPE_VAL_SINGLE_CHANNEL = (1)
+
+# IKP_TRIGGER_FRAME_ACTIVE_MODE frame active mode is on or off
+IKP_TRIGGER_FRAME_ACTIVE_MODE_OFF = (0)
+IKP_TRIGGER_FRAME_ACTIVE_MODE_ON = (1)
+
+# IKP_JPEG_COMPRESS_ENABLE
+IKP_JPEG_COMPRESS_ENABLE_OFF = (0)
+IKP_JPEG_COMPRESS_ENABLE_ON = (1)
+
+# IKP_JPEG_COMPRESS_QUALITY
+IKP_JPEG_COMPRESS_QUALITY_MIN = (1)
+IKP_JPEG_COMPRESS_QUALITY_MAX = (100)
+
+IKP_SHAFT_ENCODER1_CLOCK_DUTY_COMPENSATION_RISING_EDGE = (0)
+IKP_SHAFT_ENCODER1_CLOCK_DUTY_COMPENSATION_FALLING_EDGE = (1)
+
+# IKP_CXP_SHAFT_ENCODER_REVERSE_MODE
+IKP_CXP_SHAFT_ENCODER_REVERSE_MODE_FORWARD_ONLY = (0)
+IKP_CXP_SHAFT_ENCODER_REVERSE_MODE_ANY_DIRECTION = (1)
+IKP_CXP_SHAFT_ENCODER_REVERSE_MODE_BACKWARD_ONLY = (2)
+
+# Status information
+IK_RTN_OK = (1)
+IK_RTN_ERROR = (0)
+
+IKStatus_Success = 0x00000001
+
+IKStatus_BoardNotFound = 0x00000002
+IKStatus_AllocMemoryFail = 0x00000003
+IKStatus_InvalidParameter = 0x00000004
+IKStatus_OpenBoardFail = 0x00000005
+IKStatus_TimeOut = 0x00000006
+IKStatus_WinError = 0x00000007
+IKStatus_BoardNotOpen = 0x00000008
+IKStatus_ConfigFilePathInvalid = 0x00000009
+IKStatus_ConfigParameterInvalid = 0x0000000a
+IKStatus_ZLP = 0x0000000b
+IKStatus_ThreadUnsetup = 0x0000000c
+IKStatus_ThreadExist = 0x0000000d
+IKStatus_CameraUnsupport = 0x0000000e
+IKStatus_XMLFileLoadFail = 0x0000000f
+IKStatus_NodeNotExist = 0x00000010
+IKStatus_WriteSerialFail = 0x00000011
+IKStatus_CommandNotExist = 0x00000012
+IKStatus_CommandCollision = 0x00000013
+IKStatus_CommandMissRequirement = 0x00000014
+IKStatus_CommandNotAllow = 0x00000015
+IKStatus_CommandSyntaxError = 0x00000016
+IKStatus_NodeTypeDismatch = 0x00000017
+IKStatus_FeatureUnSupport = 0x00000018
+IKStatus_CommandResultNoExit = 0x00000019
+IKStatus_CLRegPathNotFound = 0x0000001a
+IKStatus_CLDLLNotFound = 0x0000001b
+IKStatus_CameraNotFound = 0x0000001c
+IKStatus_BufferTooSmall = 0x0000001d
+IKStatus_BaudrateNotSupport = 0x0000001e
+IKStatus_CameraInUse = 0x0000001f
+IKStatus_FPGA_EraseFlashFail = 0x00000020
+IKStatus_FPGA_CheckFail = 0x00000021
+IKStatus_BoardNotBindingCOM = 0x00000022
+IKStatus_ReadRegFail = 0x00000023
+IKStatus_Invalid_Mutex = 0x00000024
+IKStatus_Mutex_Locked = 0x00000025
+IKStatus_Invalid_Handle = 0x00000026
+IKStatus_Set_Info_Error = 0x00000027
+IKStatus_Grab_Pending = 0x00000028
+IKStatus_Insufficient_Resource = 0x00000029
+IKStatus_Grab_Abort = 0x0000002a
+IKStatus_Need_Reboot = 0x0000002b
+IKStatus_Need_Restart = 0x0000002c
+IKStatus_Not_Implement = 0x0000002d
+
+
+# Buffer Status
+class IKAPBUFFERSTATUS(Structure):
+    _fields_ = [("uFull", c_uint),
+                ("uEmpty", c_uint),
+                ("uTransfer", c_uint),
+                ("uOverflow", c_uint),
+                ("uLineNum", c_uint)]
+
+
+class IKAPBUFFERSTATUSEX(Structure):
+    _fields_ = [("uFull", c_uint),
+                ("uEmpty", c_uint),
+                ("uTransfer", c_uint),
+                ("uOverflow", c_uint),
+                ("uLineNum", c_uint),
+                ("uCompressSize", c_uint64),
+                ("uTimestamp", c_uint64),
+                ("Reserved", c_char * 62)]
+
+
+# Error Handle
+class IKAPERRORINFO(Structure):
+    _fields_ = [("uBoardType", c_uint),  # Board type
+                ("uBoardIndex", c_uint),  # Board index
+                ("uErrorCode", c_uint)]  # Error code
+
+
+# CoaXPress Board Information
+class IKAP_CXP_BOARD_INFO(Structure):
+    _fields_ = [("BoardIndex", c_uint),
+                ("MasterPort", c_uint),
+                ("SlaveCount", c_uint),
+                ("SlavePort", c_uint * 7),
+                ("CameraIndex", c_uint),
+                ("Reserved", c_char * 252)]
+
+
+# Bus addressable memory
+class IKAP_BUS_MEMORY(Structure):
+    _fields_ = [("BusAddress", c_uint64),  # PCIe bus physical address
+                ("Size", c_uint),  # Memory size
+                ("UserPointer", c_void_p)]  # User-defined Pointers
+
+
+# https://www.douban.com/note/133696430/
+# Prevents 64-bit handles from intercepting 32-bit handles
+class IKAP_HANDLE(c_void_p):
+    pass
+
+
+# Get board count
+def IKapGetBoardCount(boardType):
+    nValue = c_uint()
+    res = libIKapBoard.IKapGetBoardCount(boardType, byref(nValue))
+    return res, nValue.value
+
+
+# Get board name
+def IKapGetBoardName(boardType, index):
+    strValue = create_string_buffer(128)
+    valueSize = c_uint(128)
+    res = libIKapBoard.IKapGetBoardName(boardType, index, byref(strValue), byref(valueSize))
+    return res, strValue.value
+
+
+# Open board
+def IKapOpen(boardType, boardIndex):
+    libIKapBoard.IKapOpen.restype = IKAP_HANDLE
+    return libIKapBoard.IKapOpen(boardType, boardIndex)
+
+
+# Open cxp board
+def IKapOpenCXP(boardType, boardIndex, cxpInfo):
+    libIKapBoard.IKapOpenCXP.restype = IKAP_HANDLE
+    return libIKapBoard.IKapOpenCXP(boardType, boardIndex, cxpInfo)
+
+
+# Close board
+def IKapClose(hDev):
+    return libIKapBoard.IKapClose(hDev)
+
+
+# Load configuration file from local
+def IKapLoadConfigurationFromFile(hDev, strFileName):
+    return libIKapBoard.IKapLoadConfigurationFromFile(hDev, strFileName)
+
+
+# Save configuration file to local
+def IKapSaveConfigurationToFile(hDev, strFileName):
+    return libIKapBoard.IKapSaveConfigurationToFile(hDev, strFileName)
+
+
+# Get board info
+def IKapGetInfo(hDev, nType):
+    nValue = c_int()
+    res = libIKapBoard.IKapGetInfo(hDev, nType, byref(nValue))
+    return res, nValue.value
+
+
+# Set board info
+def IKapSetInfo(hDev, nType, nValue):
+    return libIKapBoard.IKapSetInfo(hDev, nType, nValue)
+
+
+# Read register
+def IKapReadRegister(hDev, bar, addr):
+    val = c_uint()
+    res = libIKapBoard.IKapReadRegister(hDev, bar, addr, byref(val))
+    return res, val
+
+
+# Write register
+def IKapWriteRegister(hDev, bar, addr, val):
+    return libIKapBoard.IKapWriteRegister(hDev, bar, addr, val)
+
+
+# Register callback
+def IKapRegisterCallback(hDev, nEventType, fEventFunc, pContext):
+    return libIKapBoard.IKapRegisterCallback(hDev, nEventType, fEventFunc, pContext)
+
+
+# Unregister callback
+def IKapUnRegisterCallback(hDev, nEventType):
+    return libIKapBoard.IKapUnRegisterCallback(hDev, nEventType)
+
+
+# Start grab image
+def IKapStartGrab(hDev, nFrameCount):
+    return libIKapBoard.IKapStartGrab(hDev, nFrameCount)
+
+
+# Stop grab
+def IKapStopGrab(hDev):
+    return libIKapBoard.IKapStopGrab(hDev)
+
+
+# Wait grab image done
+def IKapWaitGrab(hDev):
+    return libIKapBoard.IKapWaitGrab(hDev)
+
+
+# Clear grab state
+def IKapClearGrab(hDev):
+    return libIKapBoard.IKapClearGrab(hDev)
+
+
+# Get transfer buffer address
+def IKapGetBufferAddress(hDev, nFrameNum, pAddress):
+    return libIKapBoard.IKapGetBufferAddress(hDev, nFrameNum, byref(pAddress))
+
+
+# Set transfer buffer address
+def IKapSetBufferAddress(hDev, nFrameNum, pAddress):
+    return libIKapBoard.IKapSetBufferAddress(hDev, nFrameNum, pAddress)
+
+
+# Get buffer statue
+def IKapGetBufferStatus(hDev, nFrameNum):
+    bufferStatus = IKAPBUFFERSTATUS()
+    res = libIKapBoard.IKapGetBufferStatus(hDev, nFrameNum, byref(bufferStatus))
+    return res, bufferStatus
+
+    # Get buffer statue
+
+
+def IKapGetBufferStatusEx(hDev, nFrameNum):
+    bufferStatus = IKAPBUFFERSTATUSEX()
+    res = libIKapBoard.IKapGetBufferStatusEx(hDev, nFrameNum, byref(bufferStatus))
+    return res, bufferStatus
+
+
+# Get the image buffer physical bus map address
+def IKapGetBufferBusAddress(hDev, nFrameNum, pBusAddress):
+    return libIKapBoard.IKapGetBufferBusAddress(hDev, nFrameNum, byref(pBusAddress))
+
+
+# Set the image buffer physical bus map address
+def IKapSetBufferBusAddress(hDev, nFrameNum, busAddress):
+    return libIKapBoard.IKapSetBufferBusAddress(hDev, nFrameNum, busAddress)
+
+
+# Release buffer to free state
+def IKapReleaseBuffer(hDev, nFrameNum):
+    return libIKapBoard.IKapReleaseBuffer(hDev, nFrameNum)
+
+
+# Get camera status now
+def IKapGetCameraStatus(hDev):
+    nStatus = c_int()
+    res = libIKapBoard.IKapGetCameraStatus(hDev, byref(nStatus))
+    return res, nStatus.value
+
+
+# Get last error info
+def IKapGetLastError(nError):
+    errorInfo = IKAPERRORINFO()
+    res = libIKapBoard.IKapGetLastError(byref(errorInfo), nError)
+    return res, errorInfo
+
+
+# Get map serial port number
+def IKapGetSerialPort(hDev):
+    nPort = c_int()
+    res = libIKapBoard.IKapGetSerialPort(hDev, byref(nPort))
+    return res, nPort
+
+
+# Get current frame rate
+def IKapGetFrameRate(hDev):
+    fFrameRate = c_longdouble()
+    res = libIKapBoard.IKapGetFrameRate(hDev, byref(fFrameRate))
+    return res, fFrameRate
+
+
+# Read cxp serial port data
+def IKapReadCXPUart(hDev, buffer, length):
+    res = libIKapBoard.IKapReadCXPUart(hDev, byref(buffer), byref(length))
+    return res
+
+
+# Write cxp serial port data
+def IKapWriteCXPUart(hDev, buffer, length):
+    res = libIKapBoard.IKapWriteCXPUart(hDev, buffer, length)
+    return res
+
+
+# Write cxp serial port data
+def IKapWaitCXPUart(hDev, nTimeout):
+    res = libIKapBoard.IKapWaitCXPUart(hDev, nTimeout)
+    return res
+
+
+# Save buffer to image file
+def IKapSaveBuffer(hDev, nFrameNum, strFileName, nFlag):
+    res = libIKapBoard.IKapSaveBuffer(hDev, nFrameNum, strFileName, nFlag)
+
+
+# Load buffer from image file
+def IKapLoadBuffer(hDev, nFrameNum, strFileName, nFlag):
+    res = libIKapBoard.IKapLoadBuffer(hDev, nFrameNum, strFileName)
+
+

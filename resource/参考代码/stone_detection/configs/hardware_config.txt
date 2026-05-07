@@ -1,0 +1,177 @@
+[flipper]
+ip = 192.168.1.12
+port = 502
+name = PLC_A_翻板机
+registers.task_request.address = 200
+registers.task_request.description = 请求任务(PLC->软件)
+registers.task_request.type = word
+registers.task_request.read_only = true
+registers.task_command.address = 201
+registers.task_command.description = 下发任务(软件->PLC)
+registers.task_command.type = word
+registers.task_command.read_only = false
+registers.flipper_status.address = 2
+registers.flipper_status.description = 状态显示(PLC->软件)
+registers.flipper_status.type = word
+registers.flipper_status.read_only = true
+registers.flipper_start.address = 303
+registers.flipper_start.description = 启动(软件->PLC)
+registers.flipper_start.type = word
+registers.flipper_start.read_only = false
+registers.flipper_stop.address = 304
+registers.flipper_stop.description = 启动(软件->PLC)
+registers.flipper_stop.type = word
+registers.flipper_stop.read_only = false
+
+[scanner.before_processing]
+ip = 0.0.0.0
+port = 9004
+name = 加工前扫描枪
+description = 加工前扫描枪,用于获取石材加工信息
+enabled = true
+
+[scanner.before_sorting]
+ip = 0.0.0.0
+port = 9005
+name = 分拣前扫描枪
+description = 分拣前扫描枪,用于获取分拣信息
+enabled = true
+
+
+[scanner.scanner1]
+ip = 0.0.0.0
+port = 2000
+name = 扫码枪1_进料
+description = 第1台侧磨机进料扫描
+enabled = true
+
+[scanner.scanner2]
+ip = 0.0.0.0
+port = 2001
+name = 扫码枪2_侧磨
+description = 第2台侧磨机进料扫描
+enabled = true
+
+[scanner.scanner3]
+ip = 0.0.0.0
+port = 2002
+name = 扫码枪3_侧磨
+description = 第3台侧磨机进料扫描
+enabled = true
+
+[scanner.scanner4]
+ip = 0.0.0.0
+port = 2003
+name = 扫码枪4_侧磨
+description = 第4台侧磨机进料扫描
+enabled = true
+
+[scanner.scanner5]
+ip = 0.0.0.0
+port = 2004
+name = 扫码枪5_分拣
+description = 第5台分拣机进料扫描
+enabled = true
+
+
+[sorter]
+ip = 192.168.1.13
+port = 502
+name = PLC_B_分拣机
+registers.task_request.address = 300
+registers.task_request.description = 请求任务(PLC->软件)
+registers.task_request.type = word
+registers.task_request.read_only = true
+registers.station_command.address = 200
+registers.station_command.description = 下发工位号(软件->PLC)
+registers.station_command.type = word
+registers.station_command.read_only = false
+
+
+[edge_grinders.磨边机1号]
+ip = 192.168.7.232
+port = 502
+slave_id = 1
+name = 磨边机1号
+registers.task_request.address = 4000
+registers.task_request.description = 请求任务(PLC->软件)
+registers.task_request.type = word
+registers.task_request.read_only = true
+registers.process_type.address = 4001
+registers.process_type.description = 加工工艺(软件->PLC)
+registers.process_type.type = word
+registers.process_type.read_only = false
+registers.material_thickness.address = 4002
+registers.material_thickness.description = 材料厚度(软件->PLC)
+registers.material_thickness.type = real
+registers.material_thickness.read_only = false
+registers.bevel_angle.address = 4004
+registers.bevel_angle.description = 斜边角度(软件->PLC)
+registers.bevel_angle.type = real
+registers.bevel_angle.read_only = false
+
+[edge_grinders.磨边机2号]
+ip = 192.168.7.233
+port = 502
+slave_id = 1
+name = 磨边机2号
+registers.task_request.address = 4000
+registers.task_request.description = 请求任务(PLC->软件)
+registers.task_request.type = word
+registers.task_request.read_only = true
+registers.process_type.address = 4001
+registers.process_type.description = 加工工艺(软件->PLC)
+registers.process_type.type = word
+registers.process_type.read_only = false
+registers.material_thickness.address = 4002
+registers.material_thickness.description = 材料厚度(软件->PLC)
+registers.material_thickness.type = real
+registers.material_thickness.read_only = false
+registers.bevel_angle.address = 4004
+registers.bevel_angle.description = 斜边角度(软件->PLC)
+registers.bevel_angle.type = real
+registers.bevel_angle.read_only = false
+
+[edge_grinders.磨边机3号]
+ip = 192.168.7.234
+port = 502
+slave_id = 1
+name = 磨边机3号
+registers.task_request.address = 4000
+registers.task_request.description = 请求任务(PLC->软件)
+registers.task_request.type = word
+registers.task_request.read_only = true
+registers.process_type.address = 4001
+registers.process_type.description = 加工工艺(软件->PLC)
+registers.process_type.type = word
+registers.process_type.read_only = false
+registers.material_thickness.address = 4002
+registers.material_thickness.description = 材料厚度(软件->PLC)
+registers.material_thickness.type = real
+registers.material_thickness.read_only = false
+registers.bevel_angle.address = 4004
+registers.bevel_angle.description = 斜边角度(软件->PLC)
+registers.bevel_angle.type = real
+registers.bevel_angle.read_only = false
+
+[edge_grinders.磨边机4号]
+ip = 192.168.7.235
+port = 502
+slave_id = 1
+name = 磨边机4号
+registers.task_request.address = 4000
+registers.task_request.description = 请求任务(PLC->软件)
+registers.task_request.type = word
+registers.task_request.read_only = true
+registers.process_type.address = 4001
+registers.process_type.description = 加工工艺(软件->PLC)
+registers.process_type.type = word
+registers.process_type.read_only = false
+registers.material_thickness.address = 4002
+registers.material_thickness.description = 材料厚度(软件->PLC)
+registers.material_thickness.type = real
+registers.material_thickness.read_only = false
+registers.bevel_angle.address = 4004
+registers.bevel_angle.description = 斜边角度(软件->PLC)
+registers.bevel_angle.type = real
+registers.bevel_angle.read_only = false
